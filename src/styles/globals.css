@@ -15,13 +15,128 @@
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
+  /* color: var(--foreground);
+  background: var(--background); */
   font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+input {
+  @apply border border-solid !border-[#212121e6] rounded-md px-1 py-2;
+}
+.useflex {
+  @apply flex items-center;
+}
+.form_layout {
+  @apply flex flex-col justify-center gap-2.5;
+}
+.form_layout label {
+  @apply min-w-[120px];
+}
+.close_icon {
+  @apply ml-auto;
+}
+.footer_btn{
+  @apply flex justify-end gap-5 pt-2.5;
+}
+.header {
+  @apply font-semibold pb-1;
+  /* @apply border-b border-solid border-[#212121e6]; */
+}
+.save_btn {
+  @apply bg-[#1890ff] text-white text-sm px-3 py-2 rounded-md;
+}
+.cancel_btn {
+  @apply border border-solid border-[#212121e6] text-sm px-3 py-2 rounded-md;
+}
+
+/* NEW */ 
+.container {
+  @apply md:max-w-[800px] mx-auto my-0 md:p-8 p-2.5;
+}
+.title {
+  @apply uppercase text-center text-[2rem] font-semibold mb-6;
+}
+.jobs_table {
+  @apply w-full mb-6 border-collapse;
+}
+.jobs_table th,
+.jobs_table td {
+  @apply text-left md:text-base text-sm border md:p-3 p-2 border-solid border-[#ddd];
+}
+/* .jobs_table th {
+  @apply bg-[#f4f4f4];
+} */
+/* .jobs_table tr:nth-child(even) {
+  @apply md:bg-[#f9f9f9];
+} */
+/* .jobs_table tr:hover {
+  @apply bg-[#f1f1f1];
+} */
+.edit-btn {
+  @apply bg-[#007bff] text-[white] text-sm cursor-pointer transition-[background-color] duration-[0.3s] ease-[ease] px-3 py-1 rounded-xl border-transparent hover:bg-[#0056b3];
+}
+.modal_header {
+  @apply flex justify-between items-center;
+}
+.modal_header h2 {
+  @apply text-base font-semibold;
+}
+.close_btn {
+  @apply text-2xl cursor-pointer border-[none];
+  background: none;
+}
+.form_layout {
+  @apply flex flex-col;
+}
+.form_group {
+  @apply mb-2;
+}
+.input_field {
+  @apply mt-1.5 w-full border rounded p-2 border-solid border-[#ddd];
+}
+.modal_footer {
+  @apply flex justify-between mt-4;
+}
+.common_btn {
+  @apply text-[white] cursor-pointer px-4 py-2 border-transparent rounded-xl;
+}
+.save_btn {
+  @apply bg-[#28a745] hover:bg-[#218838];
+}
+.cancel_btn {
+  @apply bg-[#dc3545] hover:bg-[#c82333] ;
+}
+
+@media (max-width: 768px) {
+  table, thead, tbody, th, td, tr {
+    display: block;
+  }
+  /* Hide the headers */
+  thead tr {
+    display: none;
+  }
+  /* Style each row to display as a card */
+  tr {
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+    display: block;
+  }
+  td {
+    display: block;
+    position: relative;
+    white-space: normal;
+  }
+  td::before {
+    content: attr(data-label);
+    font-size: 14px;
+    width: 45%;
+    padding-right: 10px;
+    text-align: left;
+    font-weight: bold;
   }
 }
