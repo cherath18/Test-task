@@ -1,5 +1,5 @@
-import Jobs from "./jobs";
+import JobTable from "@test-task/components/JobTable";
 
 export default function Home() {
-  return <Jobs />;
+  return <JobTable />;
 }
