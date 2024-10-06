@@ -1,75 +1,66 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fakerEN, fakerDE, fakerZH_CN } from "@faker-js/faker";
+import { AppDispatch, RootState } from "@test-task/store/store";
+import {
+  setJobs,
+  setEditingJob,
+  setModalOpen,
+  updateJob,
+} from "@test-task/store/jobsSlice";
+import { Job } from "@test-task/types/jobs";
 
-// Define the interface for a job object
-interface Job {
-  id: number;
-  type: string;
-  title: string;
-  description: string;
-}
-
-// Custom Hook: useJobManager
 const useJobManager = () => {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [editingJob, setEditingJob] = useState<Job | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
+  const { jobs, editingJob, isModalOpen } = useSelector(
+    (state: RootState) => state.jobs
+  );
 
   useEffect(() => {
     // Populate job data (fake data for now)
-    const jobData: Job[] = [fakerEN, fakerDE, fakerZH_CN].map(
-      (faker, index) => ({
-        id: index + 1,
-        type: faker.person.jobType(),
-        title: faker.person.jobTitle(),
-        description: faker.person.jobDescriptor(),
-      })
-    );
+    const jobData = [fakerEN, fakerDE, fakerZH_CN].map((faker, index) => ({
+      id: index + 1,
+      type: faker.person.jobType(),
+      title: faker.person.jobTitle(),
+      description: faker.person.jobDescriptor(),
+    }));
 
-    setJobs(jobData);
-  }, []);
+    dispatch(setJobs(jobData));
+  }, [dispatch]);
 
   const openModal = (job: Job) => {
-    setEditingJob(job);
-    setIsModalOpen(true);
+    dispatch(setEditingJob(job));
+    dispatch(setModalOpen(true));
   };
 
   const closeModal = () => {
-    setIsModalOpen(false);
-    setEditingJob(null);
+    dispatch(setModalOpen(false));
+    dispatch(setEditingJob(null));
   };
 
   const saveJob = async (values: Job) => {
-    console.log(values, "---saveJob---");
+    try {
+      const response = await fetch("/api/jobs", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-    const response = await fetch("/api/jobs", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    });
-
-    if (response.ok) {
-      const updatedJob = await response.json();
-      setJobs((prevJobs) =>
-        prevJobs.map((job) => (job.id === updatedJob.id ? updatedJob : job))
-      );
-      closeModal(); // Close the modal after saving
-      console.log("Job updated successfully:", updatedJob);
-    } else {
-      console.error("Failed to update job");
+      if (response.ok) {
+        const updatedJob = await response.json();
+        // Dispatch update to the Redux store
+        dispatch(updateJob(updatedJob));
+        // Immediately reflect the change by closing the modal
+        closeModal();
+      } else {
+        console.error("Failed to update job");
+      }
+    } catch (error) {
+      console.error("Error during job update:", error);
     }
   };
 
-  return {
-    jobs,
-    editingJob,
-    isModalOpen,
-    openModal,
-    closeModal,
-    saveJob,
-  };
+  return { jobs, editingJob, isModalOpen, openModal, closeModal, saveJob };
 };
 
 export default useJobManager;

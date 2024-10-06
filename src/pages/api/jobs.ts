@@ -2,8 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import db from "../lib/db";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  console.log("API CONNECTED, Method:", req.method);
-
   if (req.method === "GET") {
     // Fetch jobs from the database
     try {
